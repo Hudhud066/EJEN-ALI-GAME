@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ejen Ali: Misi Menyelamatkan Alam Sekitar</title>
+<style>
+:root{
+  --navy:#06152f;--blue:#0b3b75;--cyan:#47e7ff;--red:#ff385b;
+  --green:#38e6a0;--gold:#ffd166;--white:#f5fbff;--muted:#b9d5ed;
+  --panel:rgba(8,32,67,.88);--line:rgba(91,221,255,.45);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--white);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 15% 5%,rgba(0,174,255,.22),transparent 27%),
+    radial-gradient(circle at 85% 20%,rgba(25,230,160,.12),transparent 25%),
+    linear-gradient(145deg,#041027 0%,#082653 55%,#06152f 100%);
+}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.2;
+  background-image:linear-gradient(rgba(80,200,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(80,200,255,.12) 1px,transparent 1px);
+  background-size:36px 36px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.app{max-width:1180px;margin:auto;padding:18px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.04em}
+.logo{width:46px;height:46px;border:2px solid var(--cyan);border-radius:14px;display:grid;place-items:center;font-size:25px;color:var(--cyan);box-shadow:0 0 18px #1ebaff55;transform:rotate(-4deg)}
+.brand small{display:block;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.12em}
+.hud{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.hud-chip{border:1px solid var(--line);background:#061a38d9;border-radius:999px;padding:8px 13px;font-weight:800;font-size:.86rem}
+.hud-chip span{color:var(--gold)}
+.screen{display:none;animation:appear .35s ease}
+.screen.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:22px;box-shadow:0 15px 45px #0005,inset 0 1px #ffffff10;overflow:hidden}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;padding:clamp(22px,5vw,54px);align-items:center;min-height:440px;position:relative}
+.kicker{color:var(--green);font-size:.8rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+h1{font-size:clamp(2.1rem,5vw,4.3rem);line-height:.98;margin:14px 0}
+h1 em{font-style:normal;color:var(--red);text-shadow:0 0 22px #ff385b55}
+h2{margin:0 0 12px;font-size:clamp(1.5rem,3vw,2.3rem)}
+h3{margin:0 0 8px}
+p{line-height:1.65;color:#d5e9fb}
+.hero-visual{min-height:280px;display:grid;place-items:center;position:relative}
+.orb{width:min(270px,70vw);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font-size:clamp(5rem,12vw,8rem);background:radial-gradient(circle at 35% 25%,#a9fbff,#1688db 38%,#07234e 72%);border:4px solid #5aeaff;box-shadow:0 0 0 12px #39caff12,0 0 55px #16bdfc55;animation:float 4s ease-in-out infinite}
+.orb:after{content:"MISI BUMI";position:absolute;bottom:14%;font-size:.72rem;letter-spacing:.2em;font-weight:900;color:#dfffff}
+@keyframes float{50%{transform:translateY(-9px)}}
+.decor{position:absolute;font-size:2rem;animation:float 5s ease-in-out infinite}
+.decor.one{top:10%;left:8%}.decor.two{right:5%;top:20%;animation-delay:.7s}.decor.three{bottom:9%;left:12%;animation-delay:1.2s}
+.field{display:block;width:100%;margin:10px 0 18px;padding:13px 15px;border-radius:12px;border:1px solid #6ac8ed66;background:#04152e;color:white}
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:900;letter-spacing:.02em;transition:transform .15s,filter .15s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn-primary{background:linear-gradient(120deg,var(--red),#ff6d65);color:white;box-shadow:0 7px 20px #ff385b30}
+.btn-cyan{background:linear-gradient(120deg,#31d9f7,#3b9cff);color:#04152e}
+.btn-green{background:linear-gradient(120deg,#39e8a0,#9af5c7);color:#052a29}
+.btn-ghost{border:1px solid var(--line);background:#0b2a50;color:var(--white)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.content{padding:clamp(18px,4vw,36px)}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.tag{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#0a2850;border-radius:999px;padding:7px 11px;font-size:.8rem;font-weight:800;color:var(--cyan)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.info-card,.mission-card,.rubric-card{border:1px solid var(--line);background:linear-gradient(145deg,#0b2d58d9,#071a37);border-radius:17px;padding:18px}
+.info-card .emoji{font-size:1.8rem}
+.mission-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.mission-card{position:relative;min-height:185px;display:flex;flex-direction:column;gap:8px;transition:.2s}
+.mission-card:hover{border-color:var(--cyan);transform:translateY(-3px)}
+.mission-card.locked{opacity:.48;filter:grayscale(.5)}
+.mission-icon{font-size:2.1rem}
+.mission-card p{font-size:.9rem;margin:0}
+.status{font-size:.75rem;color:var(--green);font-weight:900;margin-top:auto}
+.progress-wrap{height:8px;border-radius:99px;background:#ffffff18;overflow:hidden;margin:12px 0 20px}
+.progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .35s}
+.mission-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:18px}
+.scene{border-radius:18px;min-height:230px;padding:22px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(145deg,#0a6e87,#0c2b56 68%);border:1px solid #54dff5}
+.scene .big-icon{font-size:4.5rem;filter:drop-shadow(0 5px 9px #00152b)}
+.scene small{color:#c6f7ff;font-weight:900;letter-spacing:.12em}
+.task-box{border:1px solid var(--line);border-radius:17px;padding:20px;background:#06172f}
+.task-box label{display:block;font-weight:800;margin:14px 0 7px}
+textarea{width:100%;min-height:145px;resize:vertical;border:1px solid #70bfe255;background:#03132a;color:white;padding:14px;border-radius:12px;line-height:1.6}
+textarea::placeholder,input::placeholder{color:#91afc9}
+.helper{font-size:.85rem;color:var(--muted)}
+.feedback{display:none;margin-top:14px;padding:15px;border-radius:13px;border:1px solid #3ce7a077;background:#0c3d3a88}
+.feedback.show{display:block}
+.feedback h3{color:var(--green)}
+.feedback p{margin:7px 0}
+.rubric{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.rubric label{display:flex;align-items:flex-start;gap:8px;font-weight:600;font-size:.88rem;background:#ffffff08;border-radius:10px;padding:10px;margin:0}
+.rubric input{margin-top:4px;accent-color:var(--green)}
+.score-note{color:var(--gold);font-weight:800}
+.footer-note{text-align:center;color:#8fb6d8;font-size:.8rem;margin:18px 0 4px}
+.end-card{text-align:center;padding:clamp(24px,5vw,55px)}
+.trophy{font-size:5rem;filter:drop-shadow(0 0 20px #ffd16655)}
+.final-score{font-size:clamp(3rem,8vw,5.5rem);font-weight:1000;color:var(--gold);line-height:1}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0}
+.badge{border:1px solid #ffd16677;background:#4a391a88;border-radius:14px;padding:12px;min-width:120px}
+.badge span{display:block;font-size:1.8rem}
+.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);background:#102c4f;border:1px solid var(--cyan);padding:12px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:20;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:800px){
+ .hero{grid-template-columns:1fr}.hero-visual{min-height:220px;grid-row:1}
+ .mission-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .mission-layout{grid-template-columns:1fr}.scene{min-height:170px}
+}
+@media(max-width:520px){
+ .app{padding:10px}.topbar{align-items:flex-start;flex-direction:column}.hud{justify-content:flex-start}
+ .grid,.mission-grid,.rubric{grid-template-columns:1fr}.hero{padding:22px}.hero-visual{min-height:190px}
+ .orb{width:180px}.section-head{flex-direction:column}.btn{width:100%}.actions{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo">M</div><div>MISI BUMI <small>AKADEMI PENULIS MUDA</small></div></div>
+    <div class="hud">
+      <div class="hud-chip">🪙 Markah: <span id="hudScore">0</span></div>
+      <div class="hud-chip">🗺️ Misi: <span id="hudProgress">0/5</span></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="screen active panel" id="home">
+      <div class="hero">
+        <div>
+          <div class="kicker">Operasi khas • Alam sekitar</div>
+          <h1>EJEN ALI:<br><em>MISI BUMI</em><br>GEMILANG</h1>
+          <p>Alam sekitar memerlukan bantuan kamu! Selesaikan lima misi penulisan Bahasa Melayu, kumpulkan markah dan buktikan bahawa kamu ialah ejen penulis yang hebat.</p>
+          <label for="playerName"><strong>Nama ejen</strong></label>
+          <input id="playerName" class="field" maxlength="40" placeholder="Masukkan nama kamu" autocomplete="name">
+          <button class="btn btn-primary" onclick="startGame()">🚀 MULA MISI</button>
+        </div>
+        <div class="hero-visual">
+          <span class="decor one">🌿</span><span class="decor two">⚡</span><span class="decor three">♻️</span>
+          <div class="orb" aria-label="Robot pembantu">🤖</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen panel" id="guide">
+      <div class="content">
+        <div class="section-head"><div><div class="kicker">Taklimat operasi</div><h2>Selamat datang, ejen!</h2><p>Robot IRIS akan membimbing kamu dalam setiap misi.</p></div><span class="tag">📋 PANDUAN</span></div>
+        <div class="grid">
+          <div class="info-card"><div class="emoji">✍️</div><h3>1. Tulis jawapan</h3><p>Baca situasi dan hasilkan ayat atau karangan mengikut arahan misi.</p></div>
+          <div class="info-card"><div class="emoji">🔎</div><h3>2. Semak kendiri</h3><p>Tandakan kriteria rubrik yang telah kamu penuhi sebelum menghantar jawapan.</p></div>
+          <div class="info-card"><div class="emoji">⭐</div><h3>3. Kumpul markah</h3><p>Markah diberi berdasarkan panjang jawapan dan senarai semak. Semak semula hasil tulisan kamu.</p></div>
+          <div class="info-card"><div class="emoji">🏅</div><h3>4. Dapatkan lencana</h3><p>Selesaikan semua misi untuk mendapatkan gelaran Ejen Penyelamat Bumi.</p></div>
+        </div>
+        <div class="info-card" style="margin-top:14px"><h3>🎯 Objektif pembelajaran</h3><p>Pada akhir permainan, murid dapat membina ayat gramatis, mengembangkan isi dengan huraian dan contoh, membina perenggan koheren serta menghasilkan karangan pendek dan karangan lengkap tentang alam sekitar.</p><p class="helper">Nota: Markah penulisan ialah anggaran berasaskan rubrik kendiri dan panjang jawapan, bukan penilaian tatabahasa automatik yang sempurna.</p></div>
+        <div class="actions"><button class="btn btn-cyan" onclick="showScreen('map')">TERUSKAN KE PETA →</button></div>
+      </div>
+    </section>
+
+    <section class="screen panel" id="map">
+      <div class="content">
+        <div class="section-head"><div><div class="kicker">Pusat kawalan</div><h2>Peta Misi</h2><p>Pilih misi yang tersedia. Lengkapkan misi mengikut urutan untuk membuka misi seterusnya.</p></div><span class="tag">🌏 5 MISI</span></div>
+        <div class="progress-wrap"><div class="progress-bar" id="mapProgress"></div></div>
+        <div class="mission-grid" id="missionGrid"></div>
+        <div class="actions"><button class="btn btn-ghost" onclick="showScreen('guide')">← Panduan</button><button class="btn btn-ghost" onclick="resetGameConfirm()">MULA SEMULA</button></div>
+      </div>
+    </section>
+
+    <section class="screen panel" id="mission">
+      <div class="content">
+        <div class="section-head">
+          <div><div class="kicker" id="missionKicker">Operasi aktif</div><h2 id="missionTitle">Misi</h2><p id="missionSubtitle"></p></div>
+          <span class="tag" id="missionTag">✍️ PENULISAN</span>
+        </div>
+        <div class="mission-layout">
+          <div class="scene">
+            <small id="sceneLabel">ZON MISI</small>
+            <div class="big-icon" id="sceneIcon">🌊</div>
+            <div><h3 id="sceneTitle">Sungai Bersih</h3><p id="sceneText">Sungai memerlukan bantuan kamu.</p></div>
+          </div>
+          <div class="task-box">
+            <h3>🎯 Tugasan ejen</h3>
+            <p id="taskPrompt"></p>
+            <div id="exampleBox" class="helper"></div>
+            <label for="answerBox">Jawapan kamu</label>
+            <textarea id="answerBox" placeholder="Taip jawapan di sini..."></textarea>
+            <p class="helper" id="wordCount">0 patah perkataan</p>
+            <div class="rubric" id="rubricBox"></div>
+            <p class="helper">Semak jawapan sebelum dihantar. Jawapan disimpan pada peranti ini sepanjang sesi permainan.</p>
+            <div class="actions"><button class="btn btn-primary" id="submitBtn" onclick="submitAnswer()">HANTAR JAWAPAN</button></div>
+            <div class="feedback" id="feedbackBox" aria-live="polite"></div>
+          </div>
+        </div>
+        <div class="actions"><button class="btn btn-ghost" onclick="showScreen('map')">← KEMBALI KE PETA</button><button class="btn btn-cyan" id="nextBtn" onclick="nextMission()" disabled>MISI SETERUSNYA →</button></div>
+      </div>
+    </section>
+
+    <section class="screen panel" id="finish">
+      <div class="end-card">
+        <div class="trophy">🏆</div><div class="kicker">Operasi selesai</div>
+        <h2>Tahniah, <span id="finishName">Ejen!</span></h2>
+        <p>Kamu telah menyertai operasi menyelamatkan alam sekitar melalui penulisan Bahasa Melayu.</p>
+        <div class="final-score"><span id="finalScore">0</span><small style="font-size:1rem;color:#b9d5ed"> / 500 markah</small></div>
+        <p id="finishMessage"></p>
+        <div class="badges" id="badgeList"></div>
+        <div class="info-card" style="max-width:680px;margin:20px auto;text-align:left"><h3>📈 Refleksi ejen</h3><p id="reflection"></p><p class="helper">Simpan atau salin jawapan kamu jika mahu menghantarnya kepada guru. Permainan ini tidak menghantar markah kepada guru secara automatik.</p></div>
+        <div class="actions" style="justify-content:center"><button class="btn btn-green" onclick="restartGame()">MAIN SEMULA</button><button class="btn btn-ghost" onclick="showScreen('map')">LIHAT PETA MISI</button></div>
+      </div>
+    </section>
+  </main>
+  <div class="footer-note">MISI BUMI • Inovasi PdP Bahasa Melayu • Belajar, menulis dan memelihara bumi 🌱</div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const missions = [
+  {
+    id:1, icon:"🌊", zone:"ZON SUNGAI", title:"Misi 1 — Sungai Bersih", short:"Bina ayat gramatis",
+    subtitle:"Selamatkan sungai dengan ayat yang jelas dan gramatis.",
+    sceneTitle:"Sungai yang tercemar", sceneText:"Sampah plastik dan botol dibuang ke dalam sungai. Hidupan air terancam.",
+    prompt:"Bina TIGA ayat gramatis berdasarkan situasi sungai tercemar. Gunakan huruf besar pada permulaan ayat dan tanda baca yang sesuai.",
+    example:"Petunjuk: Siapakah yang membuang sampah? Apakah kesannya? Apakah tindakan yang boleh dilakukan?",
+    placeholder:"1. Penduduk...\n2. Pencemaran sungai...\n3. Kita hendaklah...",
+    minWords:18, rubrics:["Saya menulis sekurang-kurangnya tiga ayat.","Ayat mempunyai maksud yang jelas.","Saya menggunakan huruf besar dan tanda baca.","Saya menggunakan kosa kata yang sesuai."],
+    hint:"Pastikan setiap ayat menyampaikan idea yang lengkap. Semak huruf besar dan tanda baca."
+  },
+  {
+    id:2, icon:"🌳", zone:"ZON HUTAN", title:"Misi 2 — Hutan Terpelihara", short:"Kembangkan isi dan huraian",
+    subtitle:"Lindungi hutan dengan isi, huraian dan contoh.",
+    sceneTitle:"Hutan semakin berkurangan", sceneText:"Pembalakan tidak terkawal boleh memusnahkan habitat haiwan dan menjejaskan keseimbangan alam.",
+    prompt:"Kembangkan isi 'Hutan penting kepada manusia dan alam sekitar' dengan satu huraian dan satu contoh yang sesuai.",
+    example:"Petunjuk: Isi utama → Mengapa perkara itu penting? → Contoh atau kesan.",
+    placeholder:"Hutan penting kepada manusia dan alam sekitar kerana...\nSebagai contoh,...",
+    minWords:35, rubrics:["Saya menyatakan isi utama dengan jelas.","Saya memberikan huraian yang berkaitan.","Saya menyertakan contoh atau kesan.","Idea disusun dengan bahasa yang sesuai."],
+    hint:"Gunakan penanda wacana seperti 'Hal ini demikian kerana', 'Sebagai contoh' dan 'Oleh itu'."
+  },
+  {
+    id:3, icon:"🌬️", zone:"ZON UDARA", title:"Misi 3 — Udara Segar", short:"Bina perenggan koheren",
+    subtitle:"Susun idea supaya perenggan lancar dan saling berkaitan.",
+    sceneTitle:"Udara bandar tercemar", sceneText:"Asap kenderaan dan pembakaran terbuka menyebabkan kualiti udara merosot.",
+    prompt:"Tulis satu perenggan yang mengandungi ayat topik, sekurang-kurangnya dua ayat huraian dan ayat penutup tentang cara mengurangkan pencemaran udara.",
+    example:"Petunjuk: Mulakan dengan idea utama, kembangkan dengan sebab atau contoh, kemudian simpulkan.",
+    placeholder:"Antara cara mengurangkan pencemaran udara ialah...\n...\nKesimpulannya,...",
+    minWords:45, rubrics:["Saya menulis ayat topik.","Saya memberikan sekurang-kurangnya dua huraian.","Saya menggunakan penanda wacana yang sesuai.","Saya menulis ayat penutup yang berkaitan."],
+    hint:"Pastikan semua ayat menyokong idea utama. Elakkan melompat kepada idea yang tidak berkaitan."
+  },
+  {
+    id:4, icon:"♻️", zone:"ZON KITAR SEMULA", title:"Misi 4 — Kitar Semula", short:"Karangan pendek",
+    subtitle:"Gunakan bahan rangsangan untuk menghasilkan karangan pendek.",
+    sceneTitle:"Sekolah hijau", sceneText:"Tong kitar semula disediakan untuk kertas, plastik dan tin. Murid digalakkan mengasingkan sisa.",
+    prompt:"Tulis karangan pendek sekitar 80–100 patah perkataan tentang amalan kitar semula di sekolah. Huraikan sekurang-kurangnya dua amalan dan manfaatnya.",
+    example:"Bahan rangsangan: tong kitar semula, kempen kebersihan, guna semula kertas, pertandingan kelas hijau.",
+    placeholder:"Amalan kitar semula di sekolah...\n...",
+    minWords:65, rubrics:["Saya menulis pendahuluan yang sesuai.","Saya menghuraikan sekurang-kurangnya dua amalan.","Saya menerangkan manfaat amalan tersebut.","Saya menulis penutup dan menyemak bahasa."],
+    hint:"Susun karangan kepada pendahuluan, isi-isi dan penutup. Gunakan contoh yang sesuai."
+  },
+  {
+    id:5, icon:"🌍", zone:"ZON BUMI GEMILANG", title:"Misi 5 — Bumi Gemilang", short:"Karangan lengkap",
+    subtitle:"Selesaikan misi terakhir dengan karangan yang lengkap.",
+    sceneTitle:"Masa depan bumi di tangan kita", sceneText:"Setiap tindakan kecil boleh membantu memelihara bumi untuk generasi akan datang.",
+    prompt:"Hasilkan karangan lengkap bertajuk 'Peranan Remaja dalam Memelihara Alam Sekitar'. Sertakan pendahuluan, sekurang-kurangnya tiga isi dengan huraian atau contoh, dan penutup.",
+    example:"Idea: mengamalkan 3R, menyertai gotong-royong, menjimatkan air dan elektrik, menyebarkan kesedaran.",
+    placeholder:"Tajuk: Peranan Remaja dalam Memelihara Alam Sekitar\n\nPendahuluan...\n\nIsi 1...\n\nIsi 2...\n\nIsi 3...\n\nPenutup...",
+    minWords:120, rubrics:["Saya menulis pendahuluan dan penutup.","Saya menghuraikan sekurang-kurangnya tiga isi.","Saya memberikan contoh atau cadangan yang relevan.","Saya menyusun perenggan secara teratur.","Saya menyemak tatabahasa, ejaan dan tanda baca."],
+    hint:"Gunakan satu perenggan bagi setiap isi utama. Pastikan contoh menyokong isi dan penutup merumuskan karangan."
+  }
+];
+
+const state={name:"Ejen",score:0,completed:{},answers:{},rubrics:{}};
+let currentMission=0;
+const $=id=>document.getElementById(id);
+function showScreen(id){
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+ $(id).classList.add("active");window.scrollTo({top:0,behavior:"smooth"});
+}
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
+function startGame(){
+ state.name=$("playerName").value.trim()||"Ejen";
+ $("playerName").value=state.name;
+ showScreen("guide");updateHUD();
+}
+function updateHUD(){
+ $("hudScore").textContent=state.score;
+ const done=Object.keys(state.completed).length;
+ $("hudProgress").textContent=done+"/5";
+ if($("mapProgress"))$("mapProgress").style.width=(done/5*100)+"%";
+}
+function renderMap(){
+ const grid=$("missionGrid");grid.innerHTML="";
+ missions.forEach((m,i)=>{
+  const done=!!state.completed[m.id],unlocked=i===0||!!state.completed[missions[i-1].id];
+  const card=document.createElement("div");card.className="mission-card"+(!unlocked?" locked":"");
+  card.innerHTML=`<div class="mission-icon">${m.icon}</div><h3>${m.title}</h3><p>${m.short}</p><div class="status">${done?"✓ MISI SELESAI":unlocked?"🔓 BOLEH DIMAINKAN":"🔒 DIKUNCI"}</div><button class="btn ${done?"btn-green":"btn-cyan"}" ${!unlocked?"disabled":""}>${done?"ULANG KAJI":"PILIH MISI"}</button>`;
+  card.querySelector("button").addEventListener("click",()=>openMission(i));
+  grid.appendChild(card);
+ });
+ updateHUD();
+}
+function openMission(index){
+ currentMission=index;const m=missions[index];
+ $("missionKicker").textContent=m.zone;$("missionTitle").textContent=m.title;$("missionSubtitle").textContent=m.subtitle;
+ $("missionTag").textContent=`${m.icon} MISI ${m.id} / 5`;
+ $("sceneLabel").textContent=m.zone;$("sceneIcon").textContent=m.icon;$("sceneTitle").textContent=m.sceneTitle;$("sceneText").textContent=m.sceneText;
+ $("taskPrompt").textContent=m.prompt;$("exampleBox").textContent=m.example;
+ $("answerBox").placeholder=m.placeholder;$("answerBox").value=state.answers[m.id]||"";
+ $("feedbackBox").classList.remove("show");$("feedbackBox").innerHTML="";
+ $("submitBtn").disabled=!!state.completed[m.id];
+ $("submitBtn").textContent=state.completed[m.id]?"JAWAPAN TELAH DIHANTAR":"HANTAR JAWAPAN";
+ $("nextBtn").disabled=!state.completed[m.id];
+ const rb=$("rubricBox");rb.innerHTML="";
+ m.rubrics.forEach((r,j)=>{
+  const label=document.createElement("label");
+  const checked=(state.rubrics[m.id]||[]).includes(j);
+  label.innerHTML=`<input type="checkbox" value="${j}" ${checked?"checked":""}><span>${r}</span>`;
+  rb.appendChild(label);
+ });
+ updateWordCount();showScreen("mission");
+}
+$("answerBox").addEventListener("input",updateWordCount);
+function countWords(s){return s.trim()?s.trim().split(/\s+/).filter(Boolean).length:0}
+function updateWordCount(){
+ const n=countWords($("answerBox").value);$("wordCount").textContent=n+" patah perkataan";
+}
+function submitAnswer(){
+ const m=missions[currentMission],answer=$("answerBox").value.trim(),words=countWords(answer);
+ if(!answer){toast("Sila tulis jawapan sebelum menghantar.");$("answerBox").focus();return}
+ const checks=[...$("rubricBox").querySelectorAll("input:checked")].map(x=>Number(x.value));
+ state.answers[m.id]=answer;state.rubrics[m.id]=checks;
+ // Transparent, rule-based scoring: word-count component + self-check rubric.
+ const wordScore=Math.min(50,Math.round(words/Math.max(m.minWords,1)*50));
+ const rubricScore=Math.round(checks.length/m.rubrics.length*50);
+ const earned=Math.min(100,wordScore+rubricScore);
+ const firstSubmission=!state.completed[m.id];
+ if(firstSubmission){state.completed[m.id]={score:earned,words,checks:checks.length};state.score+=earned;}
+ else {state.completed[m.id].latestWords=words;}
+ updateHUD();
+ const fb=$("feedbackBox");fb.classList.add("show");
+ let status=words>=m.minWords?"Panjang jawapan memenuhi sasaran minimum yang disarankan.":"Jawapan masih pendek berbanding sasaran. Tambahkan huraian, contoh atau ayat yang berkaitan.";
+ fb.innerHTML=`<h3>🤖 Maklum balas IRIS</h3><p>${status}</p><p>Kamu menandakan <strong>${checks.length}/${m.rubrics.length}</strong> kriteria semakan kendiri.</p><p class="score-note">${firstSubmission?"Markah misi: "+earned+"/100":"Markah misi telah direkodkan sebelum ini."}</p><p>${m.hint}</p><p class="helper">Markah dikira daripada panjang jawapan (maksimum 50) dan kriteria semakan kendiri yang ditandakan (maksimum 50). Sistem ini tidak mengesahkan tatabahasa atau mutu karangan secara automatik. Semak jawapan bersama guru.</p>`;
+ $("submitBtn").disabled=true;$("submitBtn").textContent="JAWAPAN TELAH DIHANTAR";
+ $("nextBtn").disabled=false;
+ toast(firstSubmission?"Misi selesai! Markah telah ditambah.":"Jawapan dikemas kini.");
+}
+function nextMission(){
+ if(!state.completed[missions[currentMission].id]){toast("Hantar jawapan dahulu untuk menyelesaikan misi.");return}
+ if(currentMission<missions.length-1){renderMap();showScreen("map");toast("Misi selesai. Misi seterusnya tersedia!")}
+ else{finishGame()}
+}
+function finishGame(){
+ $("finishName").textContent=state.name;$("finalScore").textContent=state.score;
+ const done=Object.keys(state.completed).length;
+ $("finishMessage").textContent=state.score>=400?"Prestasi cemerlang! Kamu menunjukkan usaha yang hebat dalam misi penulisan.":state.score>=250?"Bagus! Teruskan berlatih untuk menjadikan penulisan lebih jelas dan tersusun.":"Setiap ejen bermula dengan latihan. Semak maklum balas dan cuba lagi untuk meningkatkan kemahiran.";
+ $("reflection").textContent=`Kamu telah menyelesaikan ${done} daripada 5 misi. Semak semula jawapan, tambah baik huraian dan periksa ejaan sebelum menghantar hasil penulisan kepada guru.`;
+ const badges=$("badgeList");badges.innerHTML="";
+ const earned=[];
+ if(done>=1)earned.push(["🌊","Ejen Sungai"]);
+ if(done>=2)earned.push(["🌳","Ejen Hutan"]);
+ if(done>=3)earned.push(["🌬️","Ejen Udara"]);
+ if(done>=4)earned.push(["♻️","Ejen Kitar Semula"]);
+ if(done>=5)earned.push(["🌍","Ejen Penyelamat Bumi"]);
+ earned.forEach(([icon,label])=>{const b=document.createElement("div");b.className="badge";b.innerHTML=`<span>${icon}</span><strong>${label}</strong>`;badges.appendChild(b)});
+ showScreen("finish");updateHUD();
+}
+function restartGame(){
+ state.score=0;state.completed={};state.answers={};state.rubrics={};currentMission=0;
+ $("playerName").value=state.name;renderMap();showScreen("home");updateHUD();
+}
+function resetGameConfirm(){
+ if(confirm("Mula semula permainan? Markah dan jawapan yang disimpan dalam sesi ini akan dipadam."))restartGame();
+}
+renderMap();
+</script>
+</body>
+</html>
