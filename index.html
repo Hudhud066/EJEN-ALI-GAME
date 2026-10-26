@@ -111,6 +111,59 @@ textarea::placeholder,input::placeholder{color:#91afc9}
  .grid,.mission-grid,.rubric{grid-template-columns:1fr}.hero{padding:22px}.hero-visual{min-height:190px}
  .orb{width:180px}.section-head{flex-direction:column}.btn{width:100%}.actions{flex-direction:column}
 }
+
+/* Enhanced Ejen Ali + environment theme */
+:root{
+ --navy:#041127;--blue:#0878bd;--cyan:#66f0ff;--red:#ff355d;
+ --green:#52f2a5;--gold:#ffe17b;
+}
+body{
+ background:
+ radial-gradient(ellipse at 8% 12%,rgba(30,190,255,.22),transparent 30%),
+ radial-gradient(ellipse at 88% 25%,rgba(41,255,164,.15),transparent 28%),
+ linear-gradient(145deg,#020b1d,#062451 54%,#041327);
+}
+body:after{
+ content:"";position:fixed;inset:0;pointer-events:none;opacity:.25;z-index:-1;
+ background:radial-gradient(circle at 20% 80%,#1de4bd 0 1px,transparent 2px),
+ radial-gradient(circle at 75% 35%,#6beeff 0 1px,transparent 2px),
+ radial-gradient(circle at 55% 60%,#fff 0 1px,transparent 2px);
+ background-size:110px 95px,145px 120px,180px 150px;
+}
+.logo{background:linear-gradient(135deg,#0b4c9b,#0a1e43);box-shadow:0 0 22px #31dfff66,inset 0 0 12px #47dfff33}
+.panel{backdrop-filter:blur(12px);border-color:#60e8ff66}
+.hero{background:linear-gradient(120deg,rgba(4,18,43,.6),rgba(5,43,73,.22))}
+.hero:after{
+ content:"";position:absolute;inset:auto 0 0;height:4px;
+ background:linear-gradient(90deg,var(--red),var(--cyan),var(--green),var(--red));
+ background-size:200% 100%;animation:scanline 5s linear infinite;
+}
+@keyframes scanline{to{background-position:200% 0}}
+.kicker{color:var(--green)}
+.orb{
+ background:radial-gradient(circle at 35% 25%,#d2ffff,#1ca8e8 34%,#0a3771 66%,#05152e 78%);
+ border-color:#8cf6ff;box-shadow:0 0 0 10px #39caff12,0 0 65px #16bdfc66,inset 0 0 30px #a4f8ff33;
+}
+.orb:before{content:"";position:absolute;width:calc(min(270px,70vw) + 24px);aspect-ratio:1;border:1px dashed #6beeff88;border-radius:50%;animation:spin 22s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-primary{box-shadow:0 0 20px #ff385b44,0 7px 20px #ff385b30}
+.btn-cyan{box-shadow:0 0 18px #31d9f733}
+.mission-card{background:linear-gradient(145deg,#0c3768ee,#06172f);box-shadow:inset 0 1px #ffffff0b}
+.mission-card:hover{box-shadow:0 0 24px #47e7ff22}
+.scene{box-shadow:inset 0 0 30px #47e7ff18}
+.progress-bar{box-shadow:0 0 14px #52f2a577}.mission-card:before{content:"";height:3px;position:absolute;left:0;right:0;top:0;background:linear-gradient(90deg,var(--red),var(--cyan),var(--green))}
+.mission-card{position:relative}
+.mission-card:not(.locked):hover{box-shadow:0 0 24px #43dfff24}
+.scene{position:relative;overflow:hidden;background:linear-gradient(145deg,#087a86,#0a3d70 54%,#071a39)}
+.scene:after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;border:1px solid #7cf4ff55;border-radius:50%;box-shadow:0 0 0 16px #7cf4ff0b,0 0 0 32px #7cf4ff0b}
+.scene>*{position:relative;z-index:1}
+.btn-primary{background:linear-gradient(120deg,#ff3159,#ff6c6c);box-shadow:0 0 0 1px #ff9aa966,0 8px 22px #ff385b35}
+.btn-cyan{background:linear-gradient(120deg,#6cf5ff,#36a9ff);box-shadow:0 5px 18px #24baff24}
+.btn-green{box-shadow:0 5px 18px #38e6a033}
+.tag{box-shadow:inset 0 0 12px #3bdcff10}
+.badge{box-shadow:0 0 18px #ffd16612}
+@media(max-width:520px){.orb:before{width:205px}}
+
 </style>
 </head>
 <body>
@@ -127,9 +180,9 @@ textarea::placeholder,input::placeholder{color:#91afc9}
     <section class="screen active panel" id="home">
       <div class="hero">
         <div>
-          <div class="kicker">Operasi khas • Alam sekitar</div>
+          <div class="kicker">⚡ Operasi khas • Teknologi + Alam sekitar</div>
           <h1>EJEN ALI:<br><em>MISI BUMI</em><br>GEMILANG</h1>
-          <p>Alam sekitar memerlukan bantuan kamu! Selesaikan lima misi penulisan Bahasa Melayu, kumpulkan markah dan buktikan bahawa kamu ialah ejen penulis yang hebat.</p>
+          <p>Alam sekitar memerlukan bantuan kamu! Sertai operasi futuristik, selesaikan lima misi penulisan Bahasa Melayu, kumpulkan markah dan lencana, lalu buktikan bahawa kamu ialah ejen penulis yang hebat.</p>
           <label for="playerName"><strong>Nama ejen</strong></label>
           <input id="playerName" class="field" maxlength="40" placeholder="Masukkan nama kamu" autocomplete="name">
           <button class="btn btn-primary" onclick="startGame()">🚀 MULA MISI</button>
@@ -263,110 +316,193 @@ const missions = [
     hint:"Gunakan satu perenggan bagi setiap isi utama. Pastikan contoh menyokong isi dan penutup merumuskan karangan."
   }
 ];
+let playerName = "Ejen";
+let score = 0;
+let completed = [];
+let currentMission = 0;
+let answers = {};
+let rubricChecks = {};
 
-const state={name:"Ejen",score:0,completed:{},answers:{},rubrics:{}};
-let currentMission=0;
-const $=id=>document.getElementById(id);
+function $(id){return document.getElementById(id)}
+
 function showScreen(id){
- document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
- $(id).classList.add("active");window.scrollTo({top:0,behavior:"smooth"});
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  $(id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
-function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
+
+function toast(message){
+  const el=$("toast");
+  el.textContent=message;
+  el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),2600);
+}
+
 function startGame(){
- state.name=$("playerName").value.trim()||"Ejen";
- $("playerName").value=state.name;
- showScreen("guide");updateHUD();
+  const name=$("playerName").value.trim();
+  playerName=name||"Ejen";
+  $("playerName").value=playerName;
+  showScreen("guide");
 }
+
 function updateHUD(){
- $("hudScore").textContent=state.score;
- const done=Object.keys(state.completed).length;
- $("hudProgress").textContent=done+"/5";
- if($("mapProgress"))$("mapProgress").style.width=(done/5*100)+"%";
+  $("hudScore").textContent=score;
+  $("hudProgress").textContent=completed.length+"/5";
+  $("mapProgress").style.width=(completed.length/5*100)+"%";
 }
+
 function renderMap(){
- const grid=$("missionGrid");grid.innerHTML="";
- missions.forEach((m,i)=>{
-  const done=!!state.completed[m.id],unlocked=i===0||!!state.completed[missions[i-1].id];
-  const card=document.createElement("div");card.className="mission-card"+(!unlocked?" locked":"");
-  card.innerHTML=`<div class="mission-icon">${m.icon}</div><h3>${m.title}</h3><p>${m.short}</p><div class="status">${done?"✓ MISI SELESAI":unlocked?"🔓 BOLEH DIMAINKAN":"🔒 DIKUNCI"}</div><button class="btn ${done?"btn-green":"btn-cyan"}" ${!unlocked?"disabled":""}>${done?"ULANG KAJI":"PILIH MISI"}</button>`;
-  card.querySelector("button").addEventListener("click",()=>openMission(i));
-  grid.appendChild(card);
- });
- updateHUD();
+  $("missionGrid").innerHTML="";
+  missions.forEach((m,i)=>{
+    const done=completed.includes(m.id);
+    const locked=i>0&&!completed.includes(missions[i-1].id);
+    const card=document.createElement("div");
+    card.className="mission-card"+(locked?" locked":"");
+    card.innerHTML=`
+      <div class="mission-icon">${m.icon}</div>
+      <h3>${m.title}</h3>
+      <p>${m.short}</p>
+      <div class="status">${done?"✓ MISI SELESAI":locked?"🔒 DIKUNCI":"● BOLEH DIMULAKAN"}</div>
+      <button class="btn ${done?"btn-green":"btn-cyan"}" ${locked?"disabled":""}>${done?"LIHAT SEMULA":"BUKA MISI"}</button>`;
+    card.querySelector("button").addEventListener("click",()=>openMission(i));
+    $("missionGrid").appendChild(card);
+  });
+  updateHUD();
 }
+
 function openMission(index){
- currentMission=index;const m=missions[index];
- $("missionKicker").textContent=m.zone;$("missionTitle").textContent=m.title;$("missionSubtitle").textContent=m.subtitle;
- $("missionTag").textContent=`${m.icon} MISI ${m.id} / 5`;
- $("sceneLabel").textContent=m.zone;$("sceneIcon").textContent=m.icon;$("sceneTitle").textContent=m.sceneTitle;$("sceneText").textContent=m.sceneText;
- $("taskPrompt").textContent=m.prompt;$("exampleBox").textContent=m.example;
- $("answerBox").placeholder=m.placeholder;$("answerBox").value=state.answers[m.id]||"";
- $("feedbackBox").classList.remove("show");$("feedbackBox").innerHTML="";
- $("submitBtn").disabled=!!state.completed[m.id];
- $("submitBtn").textContent=state.completed[m.id]?"JAWAPAN TELAH DIHANTAR":"HANTAR JAWAPAN";
- $("nextBtn").disabled=!state.completed[m.id];
- const rb=$("rubricBox");rb.innerHTML="";
- m.rubrics.forEach((r,j)=>{
-  const label=document.createElement("label");
-  const checked=(state.rubrics[m.id]||[]).includes(j);
-  label.innerHTML=`<input type="checkbox" value="${j}" ${checked?"checked":""}><span>${r}</span>`;
-  rb.appendChild(label);
- });
- updateWordCount();showScreen("mission");
+  currentMission=index;
+  const m=missions[index];
+  $("missionKicker").textContent=m.zone;
+  $("missionTitle").textContent=m.title;
+  $("missionSubtitle").textContent=m.subtitle;
+  $("missionTag").textContent="✍️ MISI "+m.id+"/5";
+  $("sceneLabel").textContent=m.zone;
+  $("sceneIcon").textContent=m.icon;
+  $("sceneTitle").textContent=m.sceneTitle;
+  $("sceneText").textContent=m.sceneText;
+  $("taskPrompt").textContent=m.prompt;
+  $("exampleBox").textContent=m.example;
+  $("answerBox").placeholder=m.placeholder;
+  $("answerBox").value=answers[m.id]||"";
+  $("feedbackBox").classList.remove("show");
+  $("feedbackBox").innerHTML="";
+  $("submitBtn").disabled=false;
+  $("nextBtn").disabled=!completed.includes(m.id);
+  $("wordCount").textContent=countWords($("answerBox").value)+" patah perkataan";
+  $("rubricBox").innerHTML="";
+  m.rubrics.forEach((r,i)=>{
+    const label=document.createElement("label");
+    const checked=(rubricChecks[m.id]||[]).includes(i);
+    label.innerHTML=`<input type="checkbox" ${checked?"checked":""}> <span>${r}</span>`;
+    label.querySelector("input").addEventListener("change",e=>{
+      if(!rubricChecks[m.id])rubricChecks[m.id]=[];
+      if(e.target.checked){
+        if(!rubricChecks[m.id].includes(i))rubricChecks[m.id].push(i);
+      }else{
+        rubricChecks[m.id]=rubricChecks[m.id].filter(n=>n!==i);
+      }
+    });
+    $("rubricBox").appendChild(label);
+  });
+  $("answerBox").oninput=()=>{
+    answers[m.id]=$("answerBox").value;
+    $("wordCount").textContent=countWords($("answerBox").value)+" patah perkataan";
+  };
+  showScreen("mission");
 }
-$("answerBox").addEventListener("input",updateWordCount);
-function countWords(s){return s.trim()?s.trim().split(/\s+/).filter(Boolean).length:0}
-function updateWordCount(){
- const n=countWords($("answerBox").value);$("wordCount").textContent=n+" patah perkataan";
+
+function countWords(text){
+  return text.trim()?text.trim().split(/\s+/).filter(Boolean).length:0;
 }
+
 function submitAnswer(){
- const m=missions[currentMission],answer=$("answerBox").value.trim(),words=countWords(answer);
- if(!answer){toast("Sila tulis jawapan sebelum menghantar.");$("answerBox").focus();return}
- const checks=[...$("rubricBox").querySelectorAll("input:checked")].map(x=>Number(x.value));
- state.answers[m.id]=answer;state.rubrics[m.id]=checks;
- // Transparent, rule-based scoring: word-count component + self-check rubric.
- const wordScore=Math.min(50,Math.round(words/Math.max(m.minWords,1)*50));
- const rubricScore=Math.round(checks.length/m.rubrics.length*50);
- const earned=Math.min(100,wordScore+rubricScore);
- const firstSubmission=!state.completed[m.id];
- if(firstSubmission){state.completed[m.id]={score:earned,words,checks:checks.length};state.score+=earned;}
- else {state.completed[m.id].latestWords=words;}
- updateHUD();
- const fb=$("feedbackBox");fb.classList.add("show");
- let status=words>=m.minWords?"Panjang jawapan memenuhi sasaran minimum yang disarankan.":"Jawapan masih pendek berbanding sasaran. Tambahkan huraian, contoh atau ayat yang berkaitan.";
- fb.innerHTML=`<h3>🤖 Maklum balas IRIS</h3><p>${status}</p><p>Kamu menandakan <strong>${checks.length}/${m.rubrics.length}</strong> kriteria semakan kendiri.</p><p class="score-note">${firstSubmission?"Markah misi: "+earned+"/100":"Markah misi telah direkodkan sebelum ini."}</p><p>${m.hint}</p><p class="helper">Markah dikira daripada panjang jawapan (maksimum 50) dan kriteria semakan kendiri yang ditandakan (maksimum 50). Sistem ini tidak mengesahkan tatabahasa atau mutu karangan secara automatik. Semak jawapan bersama guru.</p>`;
- $("submitBtn").disabled=true;$("submitBtn").textContent="JAWAPAN TELAH DIHANTAR";
- $("nextBtn").disabled=false;
- toast(firstSubmission?"Misi selesai! Markah telah ditambah.":"Jawapan dikemas kini.");
+  const m=missions[currentMission];
+  const answer=$("answerBox").value.trim();
+  const words=countWords(answer);
+  const checked=(rubricChecks[m.id]||[]).length;
+  if(words<5){
+    toast("Tulis jawapan terlebih dahulu sebelum menghantar.");
+    $("answerBox").focus();
+    return;
+  }
+  answers[m.id]=answer;
+  if(!completed.includes(m.id)){
+    const lengthPoints=Math.min(50,Math.round(words/m.minWords*50));
+    const rubricPoints=Math.round(50*checked/m.rubrics.length);
+    const earned=lengthPoints+rubricPoints;
+    score+=earned;
+    completed.push(m.id);
+    $("feedbackBox").innerHTML=`
+      <h3>✅ Jawapan diterima, ${playerName}!</h3>
+      <p>Kamu memperoleh <strong>${earned}/100 markah</strong> untuk misi ini.</p>
+      <p>Panjang jawapan: ${words} patah perkataan.</p>
+      <p>Senarai semak: ${checked}/${m.rubrics.length} kriteria ditandakan.</p>
+      <p><strong>Cadangan:</strong> ${m.hint}</p>
+      <p class="score-note">Semak semula jawapan dengan teliti. Markah ini ialah anggaran latihan, bukan pemarkahan automatik tatabahasa.</p>`;
+  }else{
+    $("feedbackBox").innerHTML=`
+      <h3>📝 Jawapan dikemas kini</h3>
+      <p>Kamu telah menyelesaikan misi ini. Markah asal dikekalkan.</p>
+      <p><strong>Cadangan:</strong> ${m.hint}</p>`;
+  }
+  $("feedbackBox").classList.add("show");
+  $("submitBtn").disabled=true;
+  $("nextBtn").disabled=false;
+  renderMap();
+  $("nextBtn").textContent=currentMission===4?"LIHAT KEPUTUSAN →":"MISI SETERUSNYA →";
+  toast("Misi berjaya diselesaikan!");
 }
+
 function nextMission(){
- if(!state.completed[missions[currentMission].id]){toast("Hantar jawapan dahulu untuk menyelesaikan misi.");return}
- if(currentMission<missions.length-1){renderMap();showScreen("map");toast("Misi selesai. Misi seterusnya tersedia!")}
- else{finishGame()}
+  if(currentMission===4&&completed.length===5){
+    finishGame();
+  }else{
+    showScreen("map");
+  }
 }
+
 function finishGame(){
- $("finishName").textContent=state.name;$("finalScore").textContent=state.score;
- const done=Object.keys(state.completed).length;
- $("finishMessage").textContent=state.score>=400?"Prestasi cemerlang! Kamu menunjukkan usaha yang hebat dalam misi penulisan.":state.score>=250?"Bagus! Teruskan berlatih untuk menjadikan penulisan lebih jelas dan tersusun.":"Setiap ejen bermula dengan latihan. Semak maklum balas dan cuba lagi untuk meningkatkan kemahiran.";
- $("reflection").textContent=`Kamu telah menyelesaikan ${done} daripada 5 misi. Semak semula jawapan, tambah baik huraian dan periksa ejaan sebelum menghantar hasil penulisan kepada guru.`;
- const badges=$("badgeList");badges.innerHTML="";
- const earned=[];
- if(done>=1)earned.push(["🌊","Ejen Sungai"]);
- if(done>=2)earned.push(["🌳","Ejen Hutan"]);
- if(done>=3)earned.push(["🌬️","Ejen Udara"]);
- if(done>=4)earned.push(["♻️","Ejen Kitar Semula"]);
- if(done>=5)earned.push(["🌍","Ejen Penyelamat Bumi"]);
- earned.forEach(([icon,label])=>{const b=document.createElement("div");b.className="badge";b.innerHTML=`<span>${icon}</span><strong>${label}</strong>`;badges.appendChild(b)});
- showScreen("finish");updateHUD();
+  $("finishName").textContent=playerName;
+  $("finalScore").textContent=score;
+  $("finishMessage").textContent=
+    score>=450?"Hebat! Kamu menunjukkan usaha yang cemerlang dalam misi penulisan.":
+    score>=300?"Bagus! Teruskan latihan untuk mengukuhkan kemahiran menulis.":
+    "Syabas kerana mencuba! Semak maklum balas dan teruskan berlatih.";
+  const badges=[
+    ["✍️","Ejen Penulis"],
+    ["🌿","Sahabat Bumi"],
+    ["⭐","Pejuang Ilmu"],
+    ["🏆","Ejen Gemilang"]
+  ];
+  $("badgeList").innerHTML=badges.map(b=>`<div class="badge"><span>${b[0]}</span>${b[1]}</div>`).join("");
+  $("reflection").textContent=
+    "Saya telah menyelesaikan "+completed.length+" daripada 5 misi dan memperoleh "+score+" daripada 500 markah latihan. Saya akan menyemak semula isi, huraian, susunan perenggan, tatabahasa dan tanda baca sebelum menghantar hasil penulisan.";
+  updateHUD();
+  showScreen("finish");
 }
+
 function restartGame(){
- state.score=0;state.completed={};state.answers={};state.rubrics={};currentMission=0;
- $("playerName").value=state.name;renderMap();showScreen("home");updateHUD();
+  score=0;
+  completed=[];
+  answers={};
+  rubricChecks={};
+  $("playerName").value=playerName;
+  renderMap();
+  showScreen("guide");
 }
+
 function resetGameConfirm(){
- if(confirm("Mula semula permainan? Markah dan jawapan yang disimpan dalam sesi ini akan dipadam."))restartGame();
+  if(confirm("Adakah kamu pasti mahu memulakan semula semua misi?")){
+    restartGame();
+  }
 }
-renderMap();
-</script>
-</body>
-</html>
+
+document.addEventListener("DOMContentLoaded",()=>{
+  $("playerName").value="";
+  $("answerBox").value="";
+  $("playerName").addEventListener("keydown",e=>{
+    if(e.key==="Enter")startGame();
+  });
+  renderMap();
+});
